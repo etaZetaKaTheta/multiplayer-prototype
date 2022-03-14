@@ -1,4 +1,5 @@
 using Unity.Netcode;
+using Unity.Netcode.Samples;
 using UnityEngine;
 
 public class Movement : NetworkBehaviour
@@ -11,6 +12,8 @@ public class Movement : NetworkBehaviour
     [SerializeField] private float movementMultiplier = 10.0f;
     [SerializeField] private float airMultiplier = 0.5f;
     [SerializeField] private float gravity = 3.0f;
+
+    [SerializeField] private ClientNetworkTransform nt;
 
     [Header("Camera")]
     public float sensX = 50.0f;
@@ -65,20 +68,24 @@ public class Movement : NetworkBehaviour
 
     private void Start()
     {
-        if(!IsLocalPlayer) { return; }
-        camStats.gameObject.SetActive(true);
-        rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        //if(!IsLocalPlayer) { return; }
+        if (IsLocalPlayer)
+        {
+            nt.CanCommitToTransform = true;
+            camStats.gameObject.SetActive(true);
+            rb = GetComponent<Rigidbody>();
+            rb.freezeRotation = true;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
-        TargetRotation = transform.rotation;
+            TargetRotation = transform.rotation;
+        }
     }
 
     private void Update()
     {
-        if (!IsLocalPlayer) { return; }
+        //if (!IsLocalPlayer) { return; }
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         MyInput();
@@ -149,7 +156,7 @@ public class Movement : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsLocalPlayer) { return; }
+        //if (!IsLocalPlayer) { return; }
         MovePlayer();
     }
 
