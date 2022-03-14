@@ -14,12 +14,14 @@ public class ConnectUI : NetworkBehaviour
 
     public void Connect()
     {
+        if(addressField.text == "") { addressField.text = "127.0.0.1"; }
         transport.SetConnectionData(addressField.text, 18769);
         manager.StartClient();
     }
 
     public void Host()
     {
+        if (addressField.text == "") { addressField.text = "127.0.0.1"; }
         transport.SetConnectionData(addressField.text, 18769);
         manager.StartHost();
     }

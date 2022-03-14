@@ -56,6 +56,7 @@ public class Movement : NetworkBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera camStats;
+    [SerializeField] private Transform head;
     [SerializeField] private float sprintingFOV = 100.0f;
     [SerializeField] private float normalFOV = 90.0f;
 
@@ -85,8 +86,9 @@ public class Movement : NetworkBehaviour
 
     private void Update()
     {
-        //if (!IsLocalPlayer) { return; }
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        camStats.transform.localPosition = head.localPosition;
 
         MyInput();
 
