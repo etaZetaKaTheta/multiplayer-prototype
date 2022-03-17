@@ -14,11 +14,13 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] private Movement movement;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private NetworkObject nObject;
+    [SerializeField] private Vector2 range;
+    [SerializeField] private Transform middlePoint;
 
     private void OnEnable()
     {
         health.OnValueChanged += HandleHealthChange;
-        healthText.text = health.Value.ToString();
+        healthText.text = "Health: " +  health.Value.ToString();
     }
 
     private void OnDisable()
@@ -28,7 +30,7 @@ public class PlayerStats : NetworkBehaviour
 
     private void HandleHealthChange(float prevValue, float newValue)
     {
-        healthText.text = newValue.ToString();
+        healthText.text = "Health: " + newValue.ToString();
         if(newValue <= 0)
         {
             Die();
@@ -37,39 +39,20 @@ public class PlayerStats : NetworkBehaviour
 
     public void Die()
     {
-        mr.enabled = false;
         //movement.enabled = false;
-        Invoke("Respawn", 2.0f);
+        Respawn();
     }
 
     private void Respawn()
     {
-        SetPlayerHealthServerRpc(maxHealth, nObject.OwnerClientId);
-        rb.MovePosition(new Vector3(0.0f, 0.0f, 0.0f));
-        mr.enabled = true;
+        SetPlayerHealthServerRpc(maxHealth);
+        transform.position = new Vector3(middlePoint.position.x + Random.Range(range.x, range.y), 4.0f, middlePoint.position.y + Random.Range(range.x, range.y));
         //movement.enabled = true;
     }
 
     [ServerRpc]
-    private void SetPlayerHealthServerRpc(float amount, ulong clientId)
+    private void SetPlayerHealthServerRpc(float amount)
     {
         health.Value = amount;
-
-        ClientRpcParams clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[] { clientId }
-            }
-        };
-
-        SetPlayerVisibilityClientRpc(clientRpcParams);
-
-    }
-
-    [ClientRpc]
-    private void SetPlayerVisibilityClientRpc(ClientRpcParams clientRpcParams = default)
-    {
-        mr.enabled = false;
     }
 }

@@ -10,8 +10,10 @@ public class PlayerInitializer : NetworkBehaviour
     [SerializeField] private PlayerStats stats;
     [SerializeField] private GameObject playerCanvas;
     [SerializeField] private GameObject playerCamera;
+    [SerializeField] private Rigidbody rb;
     private void Start()
     {
+        rb.MovePosition(new Vector3(0.0f, 4.0f, 0.0f));
         if (IsLocalPlayer) { return; }
         movement.enabled = false;
         weapons.enabled = false;

@@ -12,6 +12,8 @@ public class ConnectUI : NetworkBehaviour
     [SerializeField] private GameObject canvas;
     [SerializeField] private GameObject sceneCam;
 
+    bool isFullscreen = false;
+
     public void Connect()
     {
         if(addressField.text == "") { addressField.text = "127.0.0.1"; }
@@ -30,5 +32,19 @@ public class ConnectUI : NetworkBehaviour
     {
         canvas.SetActive(false);
         sceneCam.SetActive(false);
+    }
+
+    public void SetFullscreen()
+    {
+        if(isFullscreen)
+        {
+            Screen.fullScreen = false;
+            isFullscreen = false;
+        }
+        else
+        {
+            Screen.fullScreen = true;
+            isFullscreen = true;
+        }
     }
 }
